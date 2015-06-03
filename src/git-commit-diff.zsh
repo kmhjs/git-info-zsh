@@ -9,7 +9,7 @@ function git-commit-diff()
 
 function git-commit-diff-current-master()
 {
-    git-commit-diff "develop" "$(git rev-parse --abbrev-ref HEAD)"
+    git-commit-diff "master" "$(git rev-parse --abbrev-ref HEAD)"
 }
 
 function git-commit-diff-current-master-count()
