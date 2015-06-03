@@ -1,0 +1,65 @@
+function git-colorized-info()
+{
+    git-in-repository; [[ $? != 0 ]] && return -1;
+
+    local master_distance branch_name
+    local stash_count untracked_count modified_count added_count
+    local color_green color_red color_orange color_clear
+    local current_status_color
+
+    master_distance=$(git-commit-diff-current-master-count)
+    branch_name=$(git-current-branch-name)
+
+    stash_count=$(git-stash-count)
+    modified_count=$(git-modified-count)
+    untracked_count=$(git-untracked-count)
+    added_count=$(git-added-count)
+
+    color_clear='\e[0m'
+    color_red='\e[0;31m'
+    color_green='\e[0;32m'
+    color_orange='\e[0;33m'
+
+    current_status_color=$color_green
+
+    [[ $untracked_count != 0 || $modified_count != 0 ]] && {
+        current_status_color=$color_orange
+    }
+
+    [[ $added_count != 0 ]] && {
+        current_status_color=$color_red
+    }
+
+    echo -n "${current_status_color}${branch_name}${color_clear}"
+    #echo "(u:${untracked_count}/m:${modified_count}/a:${added_count}/s:${stash_count})"
+
+    echo -n ' ('
+
+    echo -n "u:"
+    [[ $untracked_count != 0 ]] && echo -n $color_orange
+    echo -n $untracked_count
+    echo -n $color_clear
+
+    echo -n "/"
+
+    echo -n "m:"
+    [[ $modified_count != 0 ]] && echo -n $color_orange
+    echo -n $modified_count
+    echo -n $color_clear
+
+    echo -n "/"
+
+    echo -n "a:"
+    [[ $added_count != 0 ]] && echo -n $color_orange
+    echo -n $added_count
+    echo -n $color_clear
+
+    echo -n "/"
+
+    echo -n "s:"
+    [[ $stash_count != 0 ]] && echo -n $color_orange
+    echo -n $stash_count
+    echo -n $color_clear
+
+    echo ')'
+}
