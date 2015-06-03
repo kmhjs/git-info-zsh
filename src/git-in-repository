@@ -1,0 +1,8 @@
+function git-in-repository()
+{
+    [[ -n "$(git branch 2>/dev/null)" ]] && {
+        return 0
+    }
+
+    return -1
+}

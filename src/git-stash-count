@@ -1,0 +1,9 @@
+function git-stash-count()
+{
+    git-in-repository; [[ $? == 0 ]] && {
+        git stash list 2>/dev/null | wc -l 2>/dev/null
+        return 0
+    }
+
+    return -1
+}

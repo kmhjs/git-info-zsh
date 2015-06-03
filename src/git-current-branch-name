@@ -1,0 +1,9 @@
+function git-current-branch-name()
+{
+    git-in-repository; [[ $? == 0 ]] && {
+        git rev-parse --abbrev-ref HEAD 2>/dev/null
+        return 0
+    }
+
+    return -1
+}
