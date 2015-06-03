@@ -18,7 +18,7 @@ function git-commit-diff()
     }
 
     git-in-repository; [[ $? == 0 ]] && {
-        git rev-list ${from_branch_name}..${target_branch_name}
+        git rev-list ${from_branch_name}..${target_branch_name} 2>/dev/null
         return 0
     }
 
@@ -28,7 +28,7 @@ function git-commit-diff()
 function git-current-branch-name()
 {
     git-in-repository; [[ $? == 0 ]] && {
-        git rev-parse --abbrev-ref HEAD
+        git rev-parse --abbrev-ref HEAD 2>/dev/null
         return 0
     }
 
@@ -38,7 +38,7 @@ function git-current-branch-name()
 function git-commit-diff-current-master()
 {
     git-in-repository; [[ $? == 0 ]] && {
-        git-commit-diff "master" "$(git rev-parse --abbrev-ref HEAD)"
+        git-commit-diff "master" "$(git rev-parse --abbrev-ref HEAD)" 2>/dev/null
         return $?
     }
 
@@ -48,7 +48,7 @@ function git-commit-diff-current-master()
 function git-commit-diff-current-master-count()
 {
     git-in-repository; [[ $? == 0 ]] && {
-        git-commit-diff-current-master | wc -l
+        git-commit-diff-current-master | wc -l 2>/dev/null
         return $?
     }
 
@@ -58,7 +58,7 @@ function git-commit-diff-current-master-count()
 function git-stash-count()
 {
     git-in-repository; [[ $? == 0 ]] && {
-        git stash list 2>/dev/null | wc -l
+        git stash list 2>/dev/null | wc -l 2>/dev/null
         return 0
     }
 
@@ -68,7 +68,7 @@ function git-stash-count()
 function git-untracked-count()
 {
     git-in-repository; [[ $? == 0 ]] && {
-        git status --porcelain | grep '^??' 2>/dev/null | wc -l
+        git status --porcelain | grep '^??' 2>/dev/null | wc -l 2>/dev/null
         return 0
     }
 
@@ -78,7 +78,7 @@ function git-untracked-count()
 function git-modified-count()
 {
     git-in-repository; [[ $? == 0 ]] && {
-        git status --porcelain | grep '^ M' 2>/dev/null | wc -l
+        git status --porcelain | grep '^ M' 2>/dev/null | wc -l 2>/dev/null
         return 0
     }
 
