@@ -1,0 +1,9 @@
+function git-commit-diff-current-master-count()
+{
+    git-in-repository; [[ $? == 0 ]] && {
+        git-commit-diff-current-master | wc -l 2>/dev/null
+        return $?
+    }
+
+    return -1
+}

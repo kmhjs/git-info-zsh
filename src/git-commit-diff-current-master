@@ -1,0 +1,9 @@
+function git-commit-diff-current-master()
+{
+    git-in-repository; [[ $? == 0 ]] && {
+        git-commit-diff "master" "$(git rev-parse --abbrev-ref HEAD)" 2>/dev/null
+        return $?
+    }
+
+    return -1
+}
