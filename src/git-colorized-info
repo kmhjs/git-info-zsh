@@ -15,10 +15,10 @@ function git-colorized-info()
     untracked_count=$(git-untracked-count)
     added_count=$(git-added-count)
 
-    color_clear='\e[0m'
-    color_red='\e[0;31m'
-    color_green='\e[0;32m'
-    color_orange='\e[0;33m'
+    color_clear='%{\e[0m%}'
+    color_red='%{\e[0;31m%}'
+    color_green='%{\e[0;32m%}'
+    color_orange='%{\e[0;33m%}'
 
     current_status_color=$color_green
 
