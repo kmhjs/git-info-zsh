@@ -46,7 +46,7 @@ function git-colorized-info()
     ## Show computed status indicator
     echo -n "${color_orange}${status_indicator}${color_clear}"
 
-    echo -n '/'
+    [[ $#status_indicator != 0 ]] && echo -n '/'
 
     ## Display number of stashes
     echo -n 's:'
