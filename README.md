@@ -29,7 +29,7 @@ In your `.zshrc`, add few lines by following descriptions.
 2. Next, `clone` this project in your favorite directory. After here, stored directory path will be written as `$PLUGIN_PATH`.
 3. Then, load plugins as follows.
 
-`
+```
 FPATH=$PLUGIN_PATH/src:$FPATH
 autoload -Uz git-in-repository
 autoload -Uz git-commit-diff
@@ -42,12 +42,11 @@ autoload -Uz git-untracked-count
 autoload -Uz git-added-count
 autoload -Uz git-deleted-count
 autoload -Uz git-colorized-info
-`
+```
 
 4. Now, the plugin is ready. Use them in your prompt etc. Here is example for right prompt. (Only show git information)
 
-`
-RPROMPT=$'$(git-colorized-info)'
+`RPROMPT=$'$(git-colorized-info)'`
 
 ## License
 
