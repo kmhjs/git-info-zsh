@@ -1,4 +1,4 @@
-function git-modified-count()
+function git-deleted-count()
 {
     git-in-repository; [[ $? == 0 ]] && {
         git status --porcelain | grep '^ *D' 2>/dev/null | wc -l 2>/dev/null
