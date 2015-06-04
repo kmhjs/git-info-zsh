@@ -1,7 +1,7 @@
 function git-added-count()
 {
     git-in-repository; [[ $? == 0 ]] && {
-        git status --porcelain | grep '^A' 2>/dev/null | wc -l 2>/dev/null
+        git status --porcelain | grep '^ *A' 2>/dev/null | wc -l 2>/dev/null
         return 0
     }
 
