@@ -1,5 +1,6 @@
 function git-colorized-info()
 {
+    # Check user is in git repository or not
     git-in-repository; [[ $? != 0 ]] && return -1;
 
     local master_distance branch_name status_indicator
@@ -7,6 +8,7 @@ function git-colorized-info()
     local color_green color_red color_orange color_clear
     local current_status_color
 
+    # Compute git status information
     master_distance=$(git-commit-diff-current-master-count)
     branch_name=$(git-current-branch-name)
 
@@ -16,32 +18,37 @@ function git-colorized-info()
     added_count=$(git-added-count)
     deleted_count=$(git-deleted-count)
 
+    # Prepare color
     color_clear='%{\e[0m%}'
     color_red='%{\e[0;31m%}'
     color_green='%{\e[0;32m%}'
     color_orange='%{\e[0;33m%}'
 
+    # Change repository name color by current status
     current_status_color=$color_green
-
-    [[ $untracked_count != 0 || $modified_count != 0 ]] && {
+    [[ $untracked_count != 0 || $modified_count != 0 ]] && \
         current_status_color=$color_orange
-    }
+    [[ $added_count != 0 ]] && current_status_color=$color_red
 
-    [[ $added_count != 0 ]] && {
-        current_status_color=$color_red
-    }
-
+    # Compute status indicator (untracked, added, modified, deleted)
     status_indicator=""
-
     [[ $untracked_count != 0 ]] && status_indicator="${status_indicator}u"
     [[ $added_count     != 0 ]] && status_indicator="${status_indicator}a"
     [[ $modified_count  != 0 ]] && status_indicator="${status_indicator}m"
     [[ $deleted_count   != 0 ]] && status_indicator="${status_indicator}d"
 
+    # Display branch name
     echo -n "${current_status_color}${branch_name}${color_clear}"
 
+    # Display statuses
     echo -n '('
 
+    ## Show computed status indicator
+    echo -n "${color_orange}${status_indicator}${color_clear}"
+
+    echo -n '/'
+
+    ## Display number of stashes
     echo -n 's:'
     [[ $stash_count != 0 ]] && echo -n $color_orange
     echo -n $stash_count
@@ -49,12 +56,11 @@ function git-colorized-info()
 
     echo -n '/'
 
+    ## Display distance between master and HEAD
     echo -n 'h:'
     [[ $master_distance != 0 ]] && echo -n $color_orange
     echo -n $master_distance
     echo -n $color_clear
-
-    echo -n "/${status_indicator}"
 
     echo ')'
 }
