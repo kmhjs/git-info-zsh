@@ -33,7 +33,7 @@ function git-colorized-info()
     echo -n "${current_status_color}${branch_name}${color_clear}"
     #echo "(u:${untracked_count}/m:${modified_count}/a:${added_count}/s:${stash_count})"
 
-    echo -n ' ('
+    echo -n '('
 
     echo -n "u:"
     [[ $untracked_count != 0 ]] && echo -n $color_orange
