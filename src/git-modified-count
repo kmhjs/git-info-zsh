@@ -1,7 +1,7 @@
 function git-modified-count()
 {
     git-in-repository; [[ $? == 0 ]] && {
-        git status --porcelain | grep '^ *M' 2>/dev/null | wc -l 2>/dev/null | tr -d ' '
+        git status --porcelain 2>/dev/null | grep '^ *M' 2>/dev/null | wc -l 2>/dev/null | tr -d ' '
         return 0
     }
 
