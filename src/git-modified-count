@@ -1,9 +1,5 @@
 function git-modified-count()
 {
-    git-in-repository; [[ $? == 0 ]] && {
-        git status --porcelain 2>/dev/null | grep '^ *M' 2>/dev/null | wc -l 2>/dev/null | tr -d ' '
-        return 0
-    }
-
-    return -1
+    echo ${$(git-update-count-base -m | grep '^m' | grep -o '[0-9]*'):-0}
+    return $?
 }
