@@ -5,6 +5,7 @@ function git-colorized-info()
 
     local master_distance branch_name status_indicator
     local stash_count untracked_count modified_count added_count deleted_count
+    local count_info
     local color_green color_red color_orange color_clear
     local current_status_color
 
@@ -13,10 +14,12 @@ function git-colorized-info()
     branch_name=$(git-current-branch-name)
 
     stash_count=$(git-stash-count)
-    modified_count=$(git-modified-count)
-    untracked_count=$(git-untracked-count)
-    added_count=$(git-added-count)
-    deleted_count=$(git-deleted-count)
+
+    count_info=$(git-update-count-base -a -u -d -m)
+    modified_count=${$(echo ${count_info}  | grep '^m' | grep -o '[0-9]'):-0}
+    untracked_count=${$(echo ${count_info} | grep '^u' | grep -o '[0-9]'):-0}
+    added_count=${$(echo ${count_info}     | grep '^a' | grep -o '[0-9]'):-0}
+    deleted_count=${$(echo ${count_info}   | grep '^d' | grep -o '[0-9]'):-0}
 
     # Prepare color
     color_clear='%{\e[0m%}'
