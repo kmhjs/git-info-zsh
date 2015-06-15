@@ -1,0 +1,43 @@
+function git-update-count-base()
+{
+    local parse_regexp args_options
+    args_options=($(echo $* | tr ' ' '\n' | sort | uniq | xargs))
+    parse_regexp=""
+
+    for e_opt (${args_options}); do
+        case ${e_opt} in
+            -a|--add)
+                parse_regexp="${parse_regexp}|A"
+                ;;
+            -d|--delete)
+                parse_regexp="${parse_regexp}|D"
+                ;;
+            -m|--modify)
+                parse_regexp="${parse_regexp}|M"
+                ;;
+            -u|--untracked)
+                parse_regexp="${parse_regexp}|\?\?"
+                ;;
+            *)
+                ;;
+        esac
+    ; done
+
+    [[ ${#parse_regexp} < 1 ]] && {
+        return 0
+    } || {
+        parse_regexp="($(echo ${parse_regexp} | sed 's!^|!!'))"
+    }
+
+    git-in-repository; [[ $? == 0 ]] && {
+        git status --porcelain 2>/dev/null                    | \
+            egrep "^ *${parse_regexp}" 2>/dev/null            | \
+            cut -d' ' -f1                                     | \
+            sed 's!??!?!g;s!.!@&!g' | tr '@' '\n' | xargs -L1 | \
+            sort | uniq -c | xargs -L1                        | \
+            tr 'ADM?' 'admu' | sed 's!^\(.\) \(.\)$!\2 \1!g'
+        return 0
+    }
+
+    return -1
+}
