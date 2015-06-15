@@ -1,5 +1,5 @@
 function git-deleted-count()
 {
-    echo ${$(git-update-count-base -d | grep '^d' | grep -o '[0-9]*'):-0}
+    echo ${$(git-update-count-base -d -n):-0}
     return $?
 }

@@ -1,5 +1,5 @@
 function git-added-count()
 {
-    echo ${$(git-update-count-base -a | grep '^a' | grep -o '[0-9]*'):-0}
+    echo ${$(git-update-count-base -a -n):-0}
     return $?
 }
