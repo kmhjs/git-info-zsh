@@ -1,9 +1,5 @@
 function git-untracked-count()
 {
-    git-in-repository; [[ $? == 0 ]] && {
-        git status --porcelain 2>/dev/null | grep '^ *??' 2>/dev/null | wc -l 2>/dev/null | tr -d ' '
-        return 0
-    }
-
-    return -1
+    echo ${$(git-update-count-base -u -n):-0}
+    return $?
 }
