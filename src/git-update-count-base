@@ -1,6 +1,8 @@
 function git-update-count-base()
 {
     local parse_regexp args_options
+    local e_opt
+
     args_options=($(echo $* | tr ' ' '\n' | sort | uniq | xargs))
     parse_regexp=""
 
@@ -32,10 +34,11 @@ function git-update-count-base()
     git-in-repository; [[ $? == 0 ]] && {
         git status --porcelain 2>/dev/null                    | \
             egrep "^ *${parse_regexp}" 2>/dev/null            | \
-            cut -d' ' -f1                                     | \
+            xargs -L1 | cut -d' ' -f1                         | \
             sed 's!??!?!g;s!.!@&!g' | tr '@' '\n' | xargs -L1 | \
             sort | uniq -c | xargs -L1                        | \
-            tr 'ADM?' 'admu' | sed 's!^\(.\) \(.\)$!\2 \1!g'
+            tr 'ADM?' 'admu' | sed 's!^\(.\) \(.\)$!\2\1!g'
+
         return 0
     }
 
