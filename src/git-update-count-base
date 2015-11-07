@@ -22,7 +22,7 @@ function git-update-count-base()
         # Parse `git status --porcelain` result
         local pl_result s t u op
 
-        pl_result=($(git status --porcelain | egrep -wo '^ *[^ ]*'))
+        pl_result=(${(M)$(git status --porcelain):#(A|M|U|\?\?)})
         parse_result=()
         for s t (a A d D m M u \?\?); do
             u=${s}
