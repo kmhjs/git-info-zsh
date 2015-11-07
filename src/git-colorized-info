@@ -18,8 +18,8 @@ function git-colorized-info()
 
     stash_count=$(git-stash-count)
 
-    count_info=$(git-update-count-base -a -u -d -m)
-    current_status=$(echo ${count_info} | grep -o '^.' | tr -d '\n')
+    count_info=($(git-update-count-base -a -u -d -m))
+    current_status=${count_info:#*0}
 
     # Prepare color
     color_clear='%{\e[0m%}'
