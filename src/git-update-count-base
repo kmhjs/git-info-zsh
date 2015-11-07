@@ -31,7 +31,7 @@ function git-update-count-base()
             op=${(M)args_options:#*-${s}*}
             [[ -n "${op}" ]] && parse_result=(${parse_result} "${u}"${#${(M)pl_result:#${t}}})
         ; done
-        parse_result=${"${parse_result}"/ /\\n}
+        parse_result=${"${parse_result}"// /\\n}
 
         # Put result
         echo ${parse_result}
