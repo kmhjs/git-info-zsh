@@ -1,46 +1,40 @@
 function git-update-count-base()
 {
-    local parse_regexp args_options
+    local args_options
     local e_opt
-    local number_only number_of_targets
     local parse_result
 
+    # Obtain options (Without duplicates)
     typeset -U args_options
-
     args_options=($(echo $*))
-    parse_regexp=""
+
+    # Parse result pattern
+    local number_only number_of_args
     number_only=0
-    number_of_targets=${#args_options}
-    parse_result=""
+    number_of_args=${#args_options}
+    [[ ${#${(M)args_options:#*-n*}} != 0 ]] && number_only=1
 
-    [[ -n "${(M)args_options:#*-a*}" ]] && parse_regexp="${parse_regexp}|A"
-    [[ -n "${(M)args_options:#*-d*}" ]] && parse_regexp="${parse_regexp}|D"
-    [[ -n "${(M)args_options:#*-m*}" ]] && parse_regexp="${parse_regexp}|M"
-    [[ -n "${(M)args_options:#*-u*}" ]] && parse_regexp="${parse_regexp}|\?\?"
-    [[ -n "${(M)args_options:#*-n*}" ]] && number_only=1
+    # Chcek number of args
+    [[ ${number_of_args} == 0 ]] && return -1
 
-    [[ ${#parse_regexp} < 1 ]] && {
-        return 0
-    } || {
-        parse_regexp="(${parse_regexp[2,-1]})"
-    }
-
+    # Return result
     git-in-repository; [[ $? == 0 ]] && {
-        parse_result=$(
-            git status --porcelain 2>/dev/null                    | \
-                egrep "^ *${parse_regexp}" 2>/dev/null            | \
-                xargs -L1 | cut -d' ' -f1                         | \
-                sed 's!??!?!g;s!.!@&!g' | tr '@' '\n' | xargs -L1 | \
-                sort | uniq -c | xargs -L1                        | \
-                tr 'ADM?' 'admu' | sed 's!^\(.\) \(.\)$!\2\1!g'   | \
-                grep '^[audm]'
-        )
+        # Parse `git status --porcelain` result
+        local pl_result s t u op
 
-        [[ ${number_only} == 1 && ${number_of_targets} == 2 ]] && {
-            echo ${$(echo ${parse_result} | grep '^[audm][0-9]*' | grep -o '[0-9]*'):-0}
-        } || {
-            echo ${parse_result}
-        }
+        pl_result=($(git status --porcelain | egrep -wo '^ *[^ ]*'))
+        parse_result=()
+        for s t (a A d D m M u \?\?); do
+            u=${s}
+            [[ ${number_only} == 1 && ${number_of_args} == 2 ]] && u=""
+
+            op=${(M)args_options:#*-${s}*}
+            [[ -n "${op}" ]] && parse_result=(${parse_result} "${u}"${#${(M)pl_result:#${t}}})
+        ; done
+        parse_result=${"${parse_result}"/ /\\n}
+
+        # Put result
+        echo ${parse_result}
 
         return 0
     }
