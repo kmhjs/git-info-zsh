@@ -33,10 +33,7 @@ function git-colorized-info()
     [[ "${current_status}" =~ '.*a.*' ]]     && current_status_color=${color_red}
 
     # Compute status indicator (untracked, added, modified, deleted)
-    status_indicator=""
-    for s (u a m d); do
-        [[ "${current_status}" =~ ".*${s}.*" ]] && status_indicator="${status_indicator}${s}"
-    ; done
+    status_indicator=${current_status//([0-9]| )/}
 
     # Display branch name
     echo -n "${current_status_color}${branch_name}${color_clear}"
@@ -66,5 +63,5 @@ function git-colorized-info()
     echo ')'
 
     # Clean up
-    rm -f $GIT_RELATED_CMDS_SHARED_TMP
+    rm -f ${GIT_RELATED_CMDS_SHARED_TMP}
 }
