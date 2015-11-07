@@ -1,5 +1,7 @@
 function git-in-repository()
 {
+    [[ -e ${GIT_RELATED_CMDS_SHARED_TMP} ]] && return 0
+
     [[ -n "$(git branch 2>/dev/null)" ]] && {
         return 0
     }
