@@ -11,10 +11,13 @@ function git-update-count-base()
     # Parse result pattern
     local number_only number_of_args
     number_only=0
-    number_of_args=${#args_options}
     [[ ${#${(M)args_options:#*-n*}} != 0 ]] && number_only=1
 
+    # Limit args
+    args_options=(${(M)args_options:#*-(a|d|u|m)*})
+
     # Chcek number of args
+    number_of_args=${#args_options}
     [[ ${number_of_args} == 0 ]] && return -1
 
     # Return result
@@ -25,12 +28,16 @@ function git-update-count-base()
         pl_result=(${(M)$(git status --porcelain):#(A|M|U|\?\?)})
         parse_result=()
         for s t (a A d D m M u \?\?); do
-            u=${s}
-            [[ ${number_only} == 1 && ${number_of_args} == 2 ]] && u=""
-
-            op=${(M)args_options:#*-${s}*}
-            [[ -n "${op}" ]] && parse_result=(${parse_result} "${u}"${#${(M)pl_result:#${t}}})
+            parse_result=(${parse_result} "${s}"${#${(M)pl_result:#${t}}})
         ; done
+        #[[ ${number_only} == 1 && ${number_of_args} == 1 ]] && parse_result=${parse_result[2,-1]}
+        [[ ${number_only} == 1 && ${number_of_args} == 1 ]] && {
+            local oper p_res
+
+            oper=${${args_options}/-/}
+            p_res=${(M)parse_result:#${oper}*}
+            parse_result=${p_res[2,-1]}
+        }
         parse_result=${"${parse_result}"// /\\n}
 
         # Put result
