@@ -1,7 +1,8 @@
 function git-stash-count()
 {
     git-in-repository; [[ $? == 0 ]] && {
-        git stash list 2>/dev/null | wc -l 2>/dev/null | tr -d ' '
+        local s
+        s=($(git stash list 2>/dev/null)); echo ${#s}
         return 0
     }
 
