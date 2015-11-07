@@ -3,6 +3,9 @@ function git-colorized-info()
     # Check user is in git repository or not
     git-in-repository; [[ $? != 0 ]] && return -1;
 
+    # When in repository, make temp file
+    GIT_RELATED_CMDS_SHARED_TMP=$(mktemp)
+
     local master_distance branch_name status_indicator
     local stash_count untracked_count modified_count added_count deleted_count
     local count_info
@@ -61,4 +64,7 @@ function git-colorized-info()
     echo -n ${color_clear}
 
     echo ')'
+
+    # Clean up
+    rm -f $GIT_RELATED_CMDS_SHARED_TMP
 }
