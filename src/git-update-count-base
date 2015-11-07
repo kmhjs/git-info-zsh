@@ -28,9 +28,8 @@ function git-update-count-base()
         pl_result=(${(M)$(git status --porcelain):#(A|M|U|\?\?)})
         parse_result=()
         for s t (a A d D m M u \?\?); do
-            parse_result=(${parse_result} "${s}"${#${(M)pl_result:#${t}}})
+            [[ ${#${(M)args_options:#*-${s}*}} != 0 ]] && parse_result=(${parse_result} "${s}"${#${(M)pl_result:#${t}}})
         ; done
-        #[[ ${number_only} == 1 && ${number_of_args} == 1 ]] && parse_result=${parse_result[2,-1]}
         [[ ${number_only} == 1 && ${number_of_args} == 1 ]] && {
             local oper p_res
 
