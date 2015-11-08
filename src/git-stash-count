@@ -2,7 +2,7 @@ function git-stash-count()
 {
     git-in-repository; [[ $? == 0 ]] && {
         local s
-        s=($(git stash list 2>/dev/null)); echo ${#s}
+        echo ${#${(M)$(git stash list 2>/dev/null):#stash*}}
         return 0
     }
 
