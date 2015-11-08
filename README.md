@@ -25,11 +25,11 @@ Example.
 In your `.zshrc`, add few lines by following descriptions.
 
 1. First, you need to enable `autoload`. Write `typeset -U fpath` before you write `autoload` statements.
-2. Next, `clone` this project in your favorite directory. After here, stored directory path will be written as `$PLUGIN_PATH`.
+2. Next, `clone` this project in your favorite directory. After here, stored directory path will be written as `${PLUGIN_PATH}`.
 3. Then, load plugins as follows.
 
     ```
-    FPATH=$PLUGIN_PATH/src:$FPATH
+    FPATH=${PLUGIN_PATH}/src:${FPATH}
     autoload -Uz git-in-repository
     autoload -Uz git-commit-diff
     autoload -Uz git-commit-diff-current-master
@@ -54,9 +54,11 @@ In your `.zshrc`, add few lines by following descriptions.
 
 ## License
 
-See LICENSE.
+See `LICENSE`.
 
 ## Others
 
-* Fork me :)
+* Fork me.
+    * Modify.
+    * Make pull request.
 * Happy hacking :)
