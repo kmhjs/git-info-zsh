@@ -25,7 +25,7 @@ function git-update-count-base()
         # Parse `git status --porcelain` result
         local pl_result s t u op
 
-        pl_result=(${(M)$(git status --porcelain):#(A|M|U|\?\?)})
+        pl_result=(${(M)$(git status --porcelain):#(A|D|M|\?\?)})
         parse_result=()
         for s t (a A d D m M u \?\?); do
             [[ ${#${(M)args_options:#*-${s}*}} != 0 ]] && parse_result=(${parse_result} "${s}"${#${(M)pl_result:#${t}}})
