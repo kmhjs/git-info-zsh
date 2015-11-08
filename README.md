@@ -1,8 +1,7 @@
-# git_related_commands
+# Git-info-zsh (git related commands)
 
-This project was created for display information on shell-prompt.
-
-Currently, this project supports zsh (tested with zsh 5.0.2 (x86_64-pc-linux-gnu)). And some other POSIX-based shell may use this script.
+This project was created for display information on (z)shell-prompt.  
+Currently, this project supports `zsh`. (Written in `zsh-script`)
 
 ## How it works
 
@@ -14,12 +13,12 @@ Example.
 
 * First element shows current branch name
 * 2nd element (`uamd`) shows current status.
-    * u : Untracked files are exist
-    * a : File was added
-    * m : File was modified
-    * d : File was deleted
+    * `u` : Untracked files are exist
+    * `a` : File was added
+    * `m` : File was modified
+    * `d` : File was deleted
 * 3rd element shows number of stashes
-* 4th element shows number of forwarding commits between master and current HEAD.
+* 4th element shows number of forwarding commits between `master` and current `HEAD`.
 
 ## Usage
 
@@ -29,24 +28,29 @@ In your `.zshrc`, add few lines by following descriptions.
 2. Next, `clone` this project in your favorite directory. After here, stored directory path will be written as `$PLUGIN_PATH`.
 3. Then, load plugins as follows.
 
-```
-FPATH=$PLUGIN_PATH/src:$FPATH
-autoload -Uz git-in-repository
-autoload -Uz git-commit-diff
-autoload -Uz git-commit-diff-current-master
-autoload -Uz git-commit-diff-current-master-count
-autoload -Uz git-current-branch-name
-autoload -Uz git-modified-count
-autoload -Uz git-stash-count
-autoload -Uz git-untracked-count
-autoload -Uz git-added-count
-autoload -Uz git-deleted-count
-autoload -Uz git-colorized-info
-```
+    ```
+    FPATH=$PLUGIN_PATH/src:$FPATH
+    autoload -Uz git-in-repository
+    autoload -Uz git-commit-diff
+    autoload -Uz git-commit-diff-current-master
+    autoload -Uz git-commit-diff-current-master-count
+    autoload -Uz git-current-branch-name
+    autoload -Uz git-modified-count
+    autoload -Uz git-stash-count
+    autoload -Uz git-untracked-count
+    autoload -Uz git-added-count
+    autoload -Uz git-deleted-countß
+    autoload -Uz git-colorized-info
+    ```
 
 4. Now, the plugin is ready. Use them in your prompt etc. Here is example for right prompt. (Only show git information)
 
-`RPROMPT=$'$(git-colorized-info)'`
+    `RPROMPT=$'$(git-colorized-info)'`
+
+## Environment
+
+* `zsh`
+    * Version `5.1.1` in `GNU` and `BSD` version.
 
 ## License
 
