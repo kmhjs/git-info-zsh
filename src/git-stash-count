@@ -2,7 +2,7 @@ function git-stash-count()
 {
     if git-in-repository
     then
-        echo ${#${(M)$(git stash list 2>/dev/null):#stash*}}
+        cat $(git rev-parse --show-toplevel)/.git/logs/refs/stash | wc -l 2>/dev/null
         return 0
     fi
 
