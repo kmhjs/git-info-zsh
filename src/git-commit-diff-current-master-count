@@ -1,10 +1,14 @@
 function git-commit-diff-current-master-count()
 {
-    git-in-repository; [[ $? == 0 ]] && {
+    if git-in-repository
+    then
         local s
-        s=($(git-commit-diff-current-master)); echo ${#s}
-        return $?
-    }
+        s=($(git-commit-diff-current-master))
 
-    return -1
+        echo ${#s}
+
+        return $?
+    fi
+
+    return 1
 }
