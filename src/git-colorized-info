@@ -1,7 +1,10 @@
 function git-colorized-info()
 {
     # Check user is in git repository or not
-    git-in-repository; [[ $? != 0 ]] && return -1;
+    if ! git-in-repository
+    then
+      return 1
+    fi
 
     # When in repository, make temp file
     GIT_RELATED_CMDS_SHARED_TMP=$(mktemp)
@@ -29,8 +32,15 @@ function git-colorized-info()
 
     # Change repository name color by current status
     current_status_color=${color_green}
-    [[ "${current_status}" =~ '.*(u|m).*' ]] && current_status_color=${color_orange}
-    [[ "${current_status}" =~ '.*a.*' ]]     && current_status_color=${color_red}
+    if [[ "${current_status}" =~ '.*(u|m).*' ]]
+    then
+      current_status_color=${color_orange}
+    fi
+
+    if [[ "${current_status}" =~ '.*a.*' ]]
+    then
+      current_status_color=${color_red}
+    fi
 
     # Compute status indicator (untracked, added, modified, deleted)
     status_indicator=${current_status//([0-9]| )/}
@@ -44,11 +54,18 @@ function git-colorized-info()
     ## Show computed status indicator
     echo -n "${color_orange}${status_indicator}${color_clear}"
 
-    [[ ${#status_indicator} != 0 ]] && echo -n '/'
+    if [[ ${#status_indicator} != 0 ]]
+    then
+      echo -n '/'
+    fi
 
     ## Display number of stashes
     echo -n 's:'
-    [[ ${stash_count} != 0 ]] && echo -n ${color_orange}
+    if [[ ${stash_count} != 0 ]]
+    then
+      echo -n ${color_orange}
+    fi
+
     echo -n ${stash_count}
     echo -n ${color_clear}
 
@@ -56,7 +73,11 @@ function git-colorized-info()
 
     ## Display distance between master and HEAD
     echo -n 'h:'
-    [[ ${master_distance} != 0 ]] && echo -n ${color_orange}
+    if [[ ${master_distance} != 0 ]]
+    then
+      echo -n ${color_orange}
+    fi
+
     echo -n ${master_distance}
     echo -n ${color_clear}
 
