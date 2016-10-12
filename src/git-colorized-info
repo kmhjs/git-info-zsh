@@ -12,7 +12,7 @@ function git-colorized-info()
     local master_distance branch_name status_indicator
     local stash_count untracked_count modified_count added_count deleted_count
     local count_info
-    local color_green color_red color_orange color_clear
+    local color_green color_red color_yellow color_clear
     local current_status_color
 
     # Compute git status information
@@ -25,16 +25,16 @@ function git-colorized-info()
     current_status=${count_info:#*0}
 
     # Prepare color
-    color_clear='%{\e[0m%}'
-    color_red='%{\e[0;31m%}'
-    color_green='%{\e[0;32m%}'
-    color_orange='%{\e[0;33m%}'
+    color_clear="%{${reset_color}%}"
+    color_red="%{${fg[red]}%}"
+    color_green="%{${fg[green]}%}"
+    color_yellow="%{${fg[yellow]}%}"
 
     # Change repository name color by current status
     current_status_color=${color_green}
     if [[ "${current_status}" =~ '.*(u|m).*' ]]
     then
-      current_status_color=${color_orange}
+      current_status_color=${color_yellow}
     fi
 
     if [[ "${current_status}" =~ '.*a.*' ]]
@@ -52,7 +52,7 @@ function git-colorized-info()
     echo -n '('
 
     ## Show computed status indicator
-    echo -n "${color_orange}${status_indicator}${color_clear}"
+    echo -n "${color_yellow}${status_indicator}${color_clear}"
 
     if [[ ${#status_indicator} != 0 ]]
     then
@@ -63,7 +63,7 @@ function git-colorized-info()
     echo -n 's:'
     if [[ ${stash_count} != 0 ]]
     then
-      echo -n ${color_orange}
+      echo -n ${color_yellow}
     fi
 
     echo -n ${stash_count}
@@ -75,7 +75,7 @@ function git-colorized-info()
     echo -n 'h:'
     if [[ ${master_distance} != 0 ]]
     then
-      echo -n ${color_orange}
+      echo -n ${color_yellow}
     fi
 
     echo -n ${master_distance}
