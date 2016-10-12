@@ -39,7 +39,10 @@ In your `.zshrc`, add few lines by following descriptions.
     autoload -Uz git-stash-count
     autoload -Uz git-untracked-count
     autoload -Uz git-added-count
-    autoload -Uz git-deleted-countß
+    autoload -Uz git-deleted-count
+
+    # Load colors (Dependency of git-colorized-info)
+    autoload -U colors; colors
     autoload -Uz git-colorized-info
     ```
 
@@ -50,7 +53,7 @@ In your `.zshrc`, add few lines by following descriptions.
 ## Environment
 
 * `zsh`
-    * Version `5.1.1` in `GNU` and `BSD` version.
+    * Version `5.2.0`
 
 ## License
 
