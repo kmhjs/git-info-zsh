@@ -1,10 +1,14 @@
 function git-in-repository()
 {
-    [[ -e ${GIT_RELATED_CMDS_SHARED_TMP} ]] && return 0
+    if [[ -e ${GIT_RELATED_CMDS_SHARED_TMP} ]]
+    then
+      return 0
+    fi
 
-    [[ -n "$(git branch 2>/dev/null)" ]] && {
+    if [[ -n "$(git branch 2>/dev/null)" ]]
+    then
         return 0
-    }
+    fi
 
-    return -1
+    return 1
 }
