@@ -1,36 +1,41 @@
 function git-colorized-info()
 {
+    #
     # Check user is in git repository or not
+    #
     if ! git-in-repository
     then
       return 1
     fi
 
+    #
     # When in repository, make temp file
+    #
     GIT_RELATED_CMDS_SHARED_TMP=$(mktemp)
 
-    local master_distance branch_name status_indicator
-    local stash_count untracked_count modified_count added_count deleted_count
-    local count_info
-    local color_green color_red color_yellow color_clear
-    local current_status_color
-
-    # Compute git status information
-    master_distance=$(git-commit-diff-current-master-count)
-    branch_name=$(git-current-branch-name)
-
-    stash_count=$(git-stash-count)
-
-    count_info=($(git-update-count-base -a -u -d -m))
-    current_status=${count_info:#*0}
-
+    #
     # Prepare color
+    #
+    local color_green color_red color_yellow color_clear
     color_clear="%{${reset_color}%}"
     color_red="%{${fg[red]}%}"
     color_green="%{${fg[green]}%}"
     color_yellow="%{${fg[yellow]}%}"
 
+    #
+    # Compute git status information
+    #
+    local count_info
+    count_info=($(git-update-count-base -a -u -d -m))
+    current_status=${count_info:#*0}
+
+    #
+    # Construct branch name line
+    #
+
     # Change repository name color by current status
+    local current_status_color
+
     current_status_color=${color_green}
     if [[ "${current_status}" =~ '.*(u|m).*' ]]
     then
@@ -42,46 +47,65 @@ function git-colorized-info()
       current_status_color=${color_red}
     fi
 
+    # Create branch name line
+    local branch_name
+    branch_name=$(git-current-branch-name)
+
+    local branch_name_line
+    branch_name_line="${current_status_color}${branch_name}${color_clear}"
+
+    #
+    # Construct modification status line
+    #
+
     # Compute status indicator (untracked, added, modified, deleted)
+    local status_indicator
     status_indicator=${current_status//([0-9]| )/}
 
-    # Display branch name
-    echo -n "${current_status_color}${branch_name}${color_clear}"
-
-    # Display statuses
-    echo -n '('
-
     ## Show computed status indicator
-    echo -n "${color_yellow}${status_indicator}${color_clear}"
+    local status_indicator_line
+    status_indicator_line="${color_yellow}${status_indicator}${color_clear}"
 
+    local status_indicator_separator
     if [[ ${#status_indicator} != 0 ]]
     then
-      echo -n '/'
+      status_indicator_separator='/'
     fi
 
-    ## Display number of stashes
-    echo -n 's:'
+    #
+    # Construct stash count line
+    #
+    local stash_count
+    stash_count=$(git-stash-count)
+
+    local stash_count_color
     if [[ ${stash_count} != 0 ]]
     then
-      echo -n ${color_yellow}
+      stash_count_color=${color_yellow}
     fi
 
-    echo -n ${stash_count}
-    echo -n ${color_clear}
+    local stash_count_line
+    stash_count_line="s:${stash_count_color}${stash_count}${color_clear}"
 
-    echo -n '/'
+    #
+    # Construct master distance line (distance between master and HEAD)
+    #
+    local master_distance
+    master_distance=$(git-commit-diff-current-master-count)
 
-    ## Display distance between master and HEAD
-    echo -n 'h:'
+    local master_distance_color
     if [[ ${master_distance} != 0 ]]
     then
-      echo -n ${color_yellow}
+      master_distance_color=${color_yellow}
     fi
 
-    echo -n ${master_distance}
-    echo -n ${color_clear}
+    local master_distance_line
+    master_distance_line="h:${master_distance_color}${master_distance}${color_clear}"
 
-    echo ')'
+    #
+    # Render
+    #
+    echo -n "${branch_name_line}(${status_indicator_line}${status_indicator_separator}${stash_count_line}/${master_distance_line})"
 
     # Clean up
     rm -f ${GIT_RELATED_CMDS_SHARED_TMP}
