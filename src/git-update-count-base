@@ -11,39 +11,52 @@ function git-update-count-base()
     # Parse result pattern
     local number_only number_of_args
     number_only=0
-    [[ ${#${(M)args_options:#*-n*}} != 0 ]] && number_only=1
+    if [[ ${#${(M)args_options:#*-n*}} != 0 ]]
+    then
+      number_only=1
+    fi
 
     # Limit args
     args_options=(${(M)args_options:#*-(a|d|u|m)*})
 
     # Chcek number of args
     number_of_args=${#args_options}
-    [[ ${number_of_args} == 0 ]] && return -1
+    if [[ ${number_of_args} == 0 ]]
+    then
+      return 1
+    fi
 
     # Return result
-    git-in-repository; [[ $? == 0 ]] && {
+    if git-in-repository
+    then
         # Parse `git status --porcelain` result
-        local pl_result s t u op
+        local porcelain_result s t u op
 
-        pl_result=(${(M)$(git status --porcelain):#(A|D|M|\?\?)})
+        porcelain_result=(${(M)$(git status --porcelain):#(A|D|M|\?\?)})
         parse_result=()
-        for s t (a A d D m M u \?\?); do
-            [[ ${#${(M)args_options:#*-${s}*}} != 0 ]] && parse_result=(${parse_result} "${s}"${#${(M)pl_result:#${t}}})
-        ; done
-        [[ ${number_only} == 1 && ${number_of_args} == 1 ]] && {
+        for s t (a A d D m M u \?\?)
+        do
+            if [[ ${#${(M)args_options:#*-${s}*}} != 0 ]]
+            then
+              parse_result=(${parse_result} "${s}"${#${(M)porcelain_result:#${t}}})
+            fi
+        done
+
+        if [[ ${number_only} == 1 && ${number_of_args} == 1 ]]
+        then
             local oper p_res
 
             oper=${${args_options}/-/}
             p_res=${(M)parse_result:#${oper}*}
             parse_result=${p_res[2,-1]}
-        }
+        fi
         parse_result=${"${parse_result}"// /\\n}
 
         # Put result
         echo ${parse_result}
 
         return 0
-    }
+    fi
 
-    return -1
+    return 1
 }
