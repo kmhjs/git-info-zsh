@@ -2,13 +2,9 @@ function git-in-repository()
 {
     if [[ -e ${GIT_RELATED_CMDS_SHARED_TMP} ]]
     then
-      return 0
-    fi
-
-    if [[ -n "$(git branch 2>/dev/null)" ]]
-    then
         return 0
     fi
 
-    return 1
+    git rev-parse --is-inside-work-tree 1>/dev/null 2>/dev/null
+    return $?
 }
