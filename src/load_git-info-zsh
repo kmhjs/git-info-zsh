@@ -1,0 +1,17 @@
+# Load fragments
+autoload -Uz git-added-count
+autoload -Uz git-commit-diff
+autoload -Uz git-commit-diff-current-master
+autoload -Uz git-commit-diff-current-master-count
+autoload -Uz git-current-branch-name
+autoload -Uz git-deleted-count
+autoload -Uz git-in-repository
+autoload -Uz git-modified-count
+autoload -Uz git-stash-count
+autoload -Uz git-untracked-count
+autoload -Uz git-update-count-base
+
+# Load colors (Dependency of git-colorized-info)
+autoload -U colors; colors
+
+autoload -Uz git-colorized-info

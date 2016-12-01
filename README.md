@@ -1,6 +1,6 @@
 # Git-info-zsh (git related commands)
 
-This project was created for display information on (z)shell-prompt.  
+This project was created for display information on (z)shell-prompt.
 Currently, this project supports `zsh`. (Written in `zsh-script`)
 
 ## How it works
@@ -30,20 +30,7 @@ In your `.zshrc`, add few lines by following descriptions.
 
     ```
     FPATH=${PLUGIN_PATH}/src:${FPATH}
-    autoload -Uz git-in-repository
-    autoload -Uz git-commit-diff
-    autoload -Uz git-commit-diff-current-master
-    autoload -Uz git-commit-diff-current-master-count
-    autoload -Uz git-current-branch-name
-    autoload -Uz git-modified-count
-    autoload -Uz git-stash-count
-    autoload -Uz git-untracked-count
-    autoload -Uz git-added-count
-    autoload -Uz git-deleted-count
-
-    # Load colors (Dependency of git-colorized-info)
-    autoload -U colors; colors
-    autoload -Uz git-colorized-info
+    source ${PLUGIN_PATH}/src/load_git-info-zsh
     ```
 
 4. Now, the plugin is ready. Use them in your prompt etc. Here is example for right prompt. (Only show git information)
