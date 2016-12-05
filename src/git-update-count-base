@@ -1,62 +1,90 @@
 function git-update-count-base()
 {
-    local args_options
-    local e_opt
-    local parse_result
-
-    # Obtain options (Without duplicates)
-    typeset -U args_options
-    args_options=($(echo $*))
-
-    # Parse result pattern
-    local number_only number_of_args
-    number_only=0
-    if [[ ${#${(M)args_options:#*-n*}} != 0 ]]
-    then
-      number_only=1
-    fi
-
-    # Limit args
-    args_options=(${(M)args_options:#*-(a|d|u|m)*})
-
-    # Chcek number of args
-    number_of_args=${#args_options}
-    if [[ ${number_of_args} == 0 ]]
-    then
-      return 1
-    fi
-
-    # Return result
-    if git-in-repository
-    then
-        # Parse `git status --porcelain` result
-        local porcelain_result s t u op
-
-        porcelain_result=(${(M)$(git status --porcelain):#(A|D|M|\?\?)})
-        parse_result=()
-        for s t (a A d D m M u \?\?)
-        do
-            if [[ ${#${(M)args_options:#*-${s}*}} != 0 ]]
-            then
-              parse_result=(${parse_result} "${s}"${#${(M)porcelain_result:#${t}}})
-            fi
-        done
-
-        if [[ ${number_only} == 1 && ${number_of_args} == 1 ]]
-        then
-            local oper p_res
-
-            oper=${${args_options}/-/}
-            p_res=${(M)parse_result:#${oper}*}
-            parse_result=${p_res[2,-1]}
-        fi
-        parse_result=${"${parse_result}"// /\\n}
-
-        # Put result
-        echo ${parse_result}
-
-        return 0
-    fi
-
+  # If not in under git repository, ignore
+  if ! git-in-repository
+  then
     return 1
+  fi
+
+  # Options
+  local -A option_arg_map=(
+    '-a' 'add_items'
+    '-d' 'delete_items'
+    '-m' 'modified_items'
+    '-u' 'untracked_items'
+  )
+
+  local -A enabled_options=(
+    'add_items'       0
+    'delete_items'    0
+    'untracked_items' 0
+    'modified_items'  0
+  )
+
+  # Take command line options
+  local -aU command_line_options=($*)
+
+  # Pick up number only filter
+  local number_only_option=0
+  local -aU number_only_filter=(${(M)command_line_options:#*-n*})
+  if [[ ${#number_only_filter} == 1 ]]
+  then
+    number_only_option=1
+  fi
+
+  # Filter requested items
+  # {-a,-d,-u,-m} will be accepted.
+  local -aU filters=(${(M)command_line_options:#*-(a|d|u|m)*})
+
+  ## If there are no flags for {-a,-d,-u,-m}, exit
+  if (( ${#filters} == 0 ))
+  then
+    return 1
+  fi
+
+  ## Map options to enabled_options
+  local key
+  for key in ${filters}
+  do
+    enabled_options[${option_arg_map[${key}]}]=1
+  done
+
+  ## Take only items matched to (A|D|M|\?\?)
+  local -a porcelain_result_symbols=(${(M)$(git status --porcelain):#(A|D|M|\?\?)})
+
+  ## Construct number of items list
+  local -A porcelain_symbol_map=(
+    a A
+    d D
+    m M
+    u \?\?
+  )
+
+  # Parse `git status --porcelain` result
+  local -a parse_result=()
+  local symbol porcelain_symbol
+  for symbol porcelain_symbol (${(kv)porcelain_symbol_map})
+  do
+    local key="-${symbol}"
+    local option_value=${enabled_options[${option_arg_map[${key}]}]}
+    if [[ ${option_value} == 1 ]]
+    then
+      local number_of_items=${#${(M)porcelain_result_symbols:#${porcelain_symbol}}}
+      parse_result+=("${symbol}${number_of_items}")
+    fi
+  done
+
+  # If only one item was specified, and number only flag was given, then just return number part.
+  if [[ ${number_only_option} == 1 && ${number_of_filters} == 1 ]]
+  then
+    local oper=${${target_filter}/-/}
+    local p_res=${(M)parse_result:#${oper}*}
+    parse_result=${p_res[2,-1]}
+  fi
+  parse_result=${"${parse_result}"// /\\n}
+
+  # Put result
+  echo ${parse_result}
+
+  return 0
 }
