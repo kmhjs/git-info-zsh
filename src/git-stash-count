@@ -11,7 +11,7 @@ function git-stash-count()
           return 0
         fi
 
-        cat ${stash_log_path} | wc -l 2>/dev/null
+        cat ${stash_log_path} | wc -l | tr -d ' ' 2>/dev/null
         return 0
     fi
 
