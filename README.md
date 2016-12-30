@@ -40,7 +40,7 @@ In your `.zshrc`, add few lines by following descriptions.
 ## Environment
 
 * `zsh`
-    * Version `5.2.0`
+    * Version `5.3.0`
 
 ## License
 
