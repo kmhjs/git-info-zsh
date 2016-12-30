@@ -1,10 +1,9 @@
 function git-current-branch-name()
 {
-    if git-in-repository
-    then
-        git rev-parse --abbrev-ref HEAD 2>/dev/null
-        return 0
-    fi
-
+  if ! git-in-repository
+  then
     return 1
+  fi
+
+  git rev-parse --abbrev-ref HEAD 2>/dev/null
 }

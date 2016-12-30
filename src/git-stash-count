@@ -1,19 +1,18 @@
 function git-stash-count()
 {
-    if git-in-repository
-    then
-        local stash_log_path
-        stash_log_path=$(git rev-parse --show-toplevel)/.git/logs/refs/stash
-
-        if [[ ! -e ${stash_log_path} ]]
-        then
-          echo 0
-          return 0
-        fi
-
-        cat ${stash_log_path} | wc -l | tr -d ' ' 2>/dev/null
-        return 0
-    fi
-
+  if ! git-in-repository
+  then
     return 1
+  fi
+
+  local stash_log_path
+  stash_log_path=$(git rev-parse --show-toplevel)/.git/logs/refs/stash
+
+  if [[ ! -e ${stash_log_path} ]]
+  then
+    echo '0'
+    return 0
+  fi
+
+  cat ${stash_log_path} | wc -l | tr -d ' ' 2>/dev/null
 }

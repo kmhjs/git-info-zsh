@@ -85,6 +85,4 @@ function git-update-count-base()
 
   # Put result
   echo ${parse_result}
-
-  return 0
 }
