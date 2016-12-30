@@ -5,7 +5,8 @@ function git-commit-diff-current-master-count()
     return 1
   fi
 
-  local s=($(git-commit-diff-current-master))
+  local s
+  s=($(git-commit-diff-current-master))
 
   echo ${#s}
 }
