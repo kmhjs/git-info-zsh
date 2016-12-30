@@ -1,5 +1,4 @@
 function git-untracked-count()
 {
-    echo ${$(git-update-count-base -u -n):-0}
-    return $?
+  echo ${$(git-update-count-base -u -n):-0}
 }
