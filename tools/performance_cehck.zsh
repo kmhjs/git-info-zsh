@@ -5,11 +5,9 @@ function milliseconds_unix_time() {
 }
 
 function show_proc_time() {
-  local cmd
-  cmd=${1}
+  local cmd=${1}
 
-  local avg_time
-  avg_time=0
+  local avg_time=0
 
   local number_of_samples=5
 
