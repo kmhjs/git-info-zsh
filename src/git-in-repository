@@ -1,5 +1,8 @@
 function git-in-repository()
 {
+  #
+  # If validation finished mark was exist, return 0
+  #
   if [[ -e ${GIT_RELATED_CMDS_SHARED_TMP} ]]
   then
     return 0

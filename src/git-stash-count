@@ -5,14 +5,17 @@ function git-stash-count()
     return 1
   fi
 
-  local stash_log_path
-  stash_log_path=$(git rev-parse --show-toplevel)/.git/logs/refs/stash
+  local stash_log_path=$(git rev-parse --show-toplevel)/.git/logs/refs/stash
 
+  #
+  # If there are no stashes, just output 0 for 'no stashes were found
+  #
   if [[ ! -e ${stash_log_path} ]]
   then
     echo '0'
     return 0
   fi
 
+  # TODO: Replace wc and tr with zsh native task
   cat ${stash_log_path} | wc -l | tr -d ' ' 2>/dev/null
 }
