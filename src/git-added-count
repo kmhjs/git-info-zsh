@@ -1,4 +1,4 @@
 function git-added-count()
 {
-  echo ${$(git-update-count-base -a -n):-0}
+  echo ${$(git-update-count-base -a -n):-a0}
 }
