@@ -1,4 +1,4 @@
 function git-deleted-count()
 {
-  echo ${$(git-update-count-base -d -n):-0}
+  echo ${$(git-update-count-base -d -n):-d0}
 }
